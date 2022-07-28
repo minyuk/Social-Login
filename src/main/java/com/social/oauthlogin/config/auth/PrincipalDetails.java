@@ -9,12 +9,16 @@ package com.social.oauthlogin.config.auth;
 // Security Session => Authentication => UserDetails(PrincipalDetails)
 
 import com.social.oauthlogin.domain.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Getter
+@NoArgsConstructor
 public class PrincipalDetails implements UserDetails {
 
     private User user; //콤포지션
