@@ -32,12 +32,12 @@ public class User {
     private Timestamp createDate;
 
     @Builder
-    public User(Long id, String username, String password, String email, String role, Timestamp createDate) {
-        this.id = id;
+    public User(String username, String password, String email, String role, String provider, String providerId) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
-        this.createDate = createDate;
+        this.provider = provider;
+        this.providerId = providerId;
     }
 }

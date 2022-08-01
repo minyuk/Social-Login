@@ -23,10 +23,13 @@ public class UserService {
                 .password(encPassword)
                 .email(user.getEmail())
                 .role("ROLE_USER")
+                .provider(user.getProvider())
+                .providerId(user.getProviderId())
                 .build();
 
         userRepository.save(joinUser);
     }
+
 
 
 

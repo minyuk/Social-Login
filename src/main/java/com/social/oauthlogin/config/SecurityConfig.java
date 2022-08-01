@@ -14,10 +14,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity //스프링 시큐리티 필터가 스프링 필터체인에 등록
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // secured 어노테이션 활성화, preAuthorize, postAuthorize 활성화
-@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final PrincipalOauth2UserService principalOauth2UserService;
+    @Autowired
+    private PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean //bean -> 해당 메서드의 리턴되는 오브젝트를 IoC로 등록해준다.
     public BCryptPasswordEncoder encodePwd() {

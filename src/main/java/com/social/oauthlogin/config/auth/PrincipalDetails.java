@@ -9,22 +9,31 @@ package com.social.oauthlogin.config.auth;
 // Security Session => Authentication => UserDetails(PrincipalDetails)
 
 import com.social.oauthlogin.domain.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
-@Getter
-@NoArgsConstructor
-public class PrincipalDetails implements UserDetails {
+@Data
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private User user; //콤포지션
 
+    private Map<String, Object> attributes;
+
+    //일반 로그인
     public PrincipalDetails(User user) {
         this.user = user;
+    }
+
+    //OAuth 로그인
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
     }
 
     //해당 User의 권한을 리턴하는 곳!!
@@ -70,5 +79,15 @@ public class PrincipalDetails implements UserDetails {
         // 1년 로그인하지 않을 때 휴면 계정으로 하기로함.
         // 현재 시간 - 최근 로그인 일자 => 1년을 초과하면 return false;
         return true;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }
