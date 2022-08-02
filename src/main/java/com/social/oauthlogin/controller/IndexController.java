@@ -20,26 +20,6 @@ public class IndexController {
 
     private final UserService userService;
 
-    @GetMapping("/test/login")
-    public @ResponseBody String testLogin(Authentication authentication, @AuthenticationPrincipal PrincipalDetails userDetails) { //DI(의존성 주입)
-        System.out.println("/test/login=================");
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("principalDetails: " + principalDetails.getUser());
-        System.out.println("userDetails: " + userDetails.getUser());
-
-        return "세션 정보 확인하기";
-    }
-
-    @GetMapping("/test/oauth/login")
-    public @ResponseBody String testOAuthLogin(Authentication authentication, @AuthenticationPrincipal OAuth2User oauth) { //DI(의존성 주입)
-        System.out.println("/test/oauth/login=================");
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        System.out.println("authentication: " + oAuth2User.getAttributes());
-        System.out.println("oauth2User : " + oauth.getAttributes());
-
-        return "OAuth 세션 정보 확인하기";
-    }
-
     @GetMapping({"", "/"})
     public String index() {
         return "index";

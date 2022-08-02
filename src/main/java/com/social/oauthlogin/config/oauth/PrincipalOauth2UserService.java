@@ -1,6 +1,9 @@
 package com.social.oauthlogin.config.oauth;
 
 import com.social.oauthlogin.config.auth.PrincipalDetails;
+import com.social.oauthlogin.config.oauth.provider.GoogleUserInfo;
+import com.social.oauthlogin.config.oauth.provider.NaverUserInfo;
+import com.social.oauthlogin.config.oauth.provider.OAuth2UserInfo;
 import com.social.oauthlogin.domain.User;
 import com.social.oauthlogin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,9 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+
 
 @Service
 @RequiredArgsConstructor
@@ -38,12 +44,23 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         //userRequest 정보 -> loadUser 함수 -> 회원정보 수집
         System.out.println("getAttributes: " + super.loadUser(userRequest).getAttributes());
 
+        OAuth2UserInfo oAuth2UserInfo = null;
+        if(userRequest.getClientRegistration().getRegistrationId().equals("google")) {
+            System.out.println("구글 로그인 요청");
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        } else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
+            System.out.println("네이버 로그인 요청");
+            oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
+        } else {
+            System.out.println("지원하지 않는 소셜입니다.");
+        }
+
         //회원가입을 강제로 진행
-        String provider = userRequest.getClientRegistration().getClientName(); //google
-        String providerId = oAuth2User.getAttribute("sub");
-        String username = provider + "_" + providerId; //google_123456789
+        String provider = oAuth2UserInfo.getProvider();
+        String providerId = oAuth2UserInfo.getProviderId();
+        String username = provider + "_" + providerId;
         String password = bCryptPasswordEncoder.encode("겟인데어");
-        String email = oAuth2User.getAttribute("email");
+        String email = oAuth2UserInfo.getEmail();
         String role = "ROLE_USER";
 
         User userEntity = userRepository.findByUsername(username);
